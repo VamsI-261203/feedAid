@@ -1,0 +1,70 @@
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fffbf4;
+    
+}
+
+.login-box {
+    width: 80%;
+    height: 85vh;
+    margin: 40px 0px;
+    border-radius: 3rem;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+
+.login-header {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 15vh;
+    justify-content: center;
+}
+
+.logo1 {
+    max-height: 96px;
+    width: 100px;
+}
+
+.form-content {
+    display: flex;
+    width: 100%;
+    height: 65vh;
+    justify-content: center;
+    border-radius: 3px;
+}
+
+.form-inputs {
+    position: relative;
+    left: 1rem;
+    width: 500px;
+}
+
+.row {
+    margin-top: 30px;
+}
+
+.col-last {
+    display: flex;
+    justify-content: center;
+}
+
+.submit-btn {
+    /* background-color: burlywood; */
+    /* background-color: red; */
+    width: 100%;
+    border-radius: 0.8rem;
+}
+
+#last-btn {
+    background-color: black;
+    color: #fff;
+    border: none;
+}
+
+#last-btn:hover {
+    background-color: #F96666;
+    color: #fff;
+}

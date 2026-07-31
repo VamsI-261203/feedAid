@@ -1,0 +1,96 @@
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fffbf4;
+    
+    min-height: 100vh;
+}
+
+.contact-box {
+    width: 60%;
+    height: auto;
+    min-height: 80vh;
+    padding-bottom: 40px;
+    margin: 40px 0px;
+    box-shadow: 0 4px 50px rgba(0, 0, 0, 0.25);
+    background-color: white;
+}
+
+.contact-header {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    justify-content: center;
+}
+
+.logo1 {
+    max-height: 96px;
+    width: 100px;
+}
+
+.form-content {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding-bottom: 20px;
+    justify-content: center;
+}
+
+.row {
+    margin-top: 30px;
+}
+
+.radio-btn {
+    padding-right: 20px;
+}
+
+.col-last {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 16px 40px;
+    border-radius: 500px;
+    display: inline-block;
+    font-weight: 500;
+    transition: all 0.4s ease-in-out;
+    background-size: 152% 100%;
+    background: #f27221;
+    border: 2px solid #f27221;
+}
+
+.btn:hover {
+    background: transparent;
+    border-color: #f27221;
+    color: #f27221;
+}
+
+#btn {
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 16px 40px;
+    border-radius: 500px;
+    display: inline-block;
+    font-weight: 500;
+    transition: all 0.4s ease-in-out;
+    background-size: 152% 100%;
+    background: #f27221;
+    border: 2px solid #f27221;
+}
+
+#btn:hover {
+    background: transparent;
+    border-color: #f27221;
+    color: #f27221;
+}

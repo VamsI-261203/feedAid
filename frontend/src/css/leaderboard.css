@@ -1,0 +1,129 @@
+.leader-main {
+    width: 100%;
+    height: auto;
+    min-height: 450px;
+    margin-bottom: 50px;
+}
+
+.medal-heading {
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+.medal-heading h1 {
+    color: #f27221;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.medals {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 30px;
+    padding-bottom: 40px;
+    min-height: 250px;
+}
+
+.medal-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 220px;
+    text-align: center;
+}
+
+.medal-img {
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.silver-img, .bronze-img {
+    height: 120px;
+}
+
+.gold-img {
+    height: 150px;
+    margin-bottom: 25px; /* Push it up slightly more than others */
+}
+
+.medal-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.medal-name {
+    font-size: 1.2rem;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.medal-city {
+    font-size: 0.9rem;
+    margin: 0;
+    color: #666;
+}
+
+.silver .medal-name { color: #a6a6a6; }
+.gold .medal-name { color: #d4af37; font-size: 1.4rem; }
+.bronze .medal-name { color: #cd7f32; }
+
+/* ---------------------------- */
+
+.container h2 {
+    margin-bottom: 20px;
+    color: #f27221;
+    margin-top: 40px;
+}
+
+.content-table {
+    border-collapse: collapse;
+    font-size: 0.9em;
+    min-width: 400px;
+    max-width: 90%;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin-top: 20px;
+    margin-bottom: 50px;
+    width: 600px;
+}
+
+.content-table thead tr {
+    background-color: #f27221;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.content-table th,
+.content-table td {
+    padding: 18px 25px;
+    text-align: center;
+}
+
+.content-table th:nth-child(2),
+.content-table td:nth-child(2) {
+    text-align: left;
+}
+
+.content-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.content-table tbody tr:last-of-type {
+    border-bottom: 2px solid #f27221;
+}
+
+.content-table tbody tr.active-row {
+    font-weight: bold;
+    color: #f27221;
+
+}

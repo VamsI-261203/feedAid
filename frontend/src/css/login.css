@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@800&display=swap');
+
+.outercontainer {
+  width: 900px;
+  max-width: 95%;
+  background-color: white;
+  border-radius: 2rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  display: flex;
+  overflow: hidden;
+  min-height: 550px;
+  margin: 40px 0;
+}
+
+.leftboximg {
+  width: 45%;
+  background: linear-gradient(to bottom, #f9e7fe 0%, #dafcfc 100%);
+  position: relative;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.rightboxlogin {
+  width: 55%;
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.imgdesc {
+  font-size: 45px;
+  font-family: 'Cinzel', serif;
+  color: #F96666;
+  text-align: center;
+  margin-bottom: 20px;
+  z-index: 10;
+}
+
+.Foodbox {
+  width: 120%;
+  opacity: 0.2;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.loginform {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.logo_icon {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.logo_page {
+  width: 60px;
+  height: 60px;
+}
+
+.secondheading h5 {
+  font-size: 15px;
+  color: #666;
+  font-weight: normal;
+}
+
+.secondheading a {
+  color: #f27221;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputs label {
+  font-weight: 500;
+  color: #333;
+}
+
+.inputs img {
+  display: none; /* Hide the messy small icons */
+}
+
+.user-input, .user-password {
+  border: none;
+  border-bottom: 2px solid #ddd;
+  padding: 10px 5px;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+  background: transparent;
+}
+
+.user-input:focus, .user-password:focus {
+  border-bottom-color: #f27221;
+}
+
+.Login {
+  background-color: #151111;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  padding: 15px;
+  margin-top: 20px;
+  transition: 0.3s;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.Login:hover {
+  background-color: #f27221;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 800px) {
+  .leftboximg {
+    display: none;
+  }
+  .rightboxlogin {
+    width: 100%;
+    padding: 40px 30px;
+  }
+}

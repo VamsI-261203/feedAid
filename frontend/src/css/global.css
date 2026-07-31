@@ -1,0 +1,134 @@
+.main {
+    display: flex;
+    align-items: flex-start;
+    padding: 40px 5% !important;
+    justify-content: center;
+    background: #fffbf4;
+    
+    min-height: calc(100vh - 80px);
+}
+
+.contact-box, .login-box {
+    width: 60%;
+    max-width: 800px;
+    height: auto;
+    min-height: 60vh;
+    padding: 40px 50px;
+    margin-bottom: 60px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    background-color: white;
+    border-radius: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contact-header, .login-header {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    justify-content: center;
+}
+
+.logo1 {
+    max-height: 96px;
+    width: 100px;
+}
+
+.form-content {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    padding-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.form-inputs {
+    flex: 1;
+    width: 100%;
+}
+
+.register-img-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+@media (max-width: 800px) {
+    .form-content {
+        flex-direction: column-reverse;
+    }
+    .register-img-container {
+        margin-bottom: 30px;
+        max-width: 80%;
+    }
+}
+
+.row {
+    margin-top: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.row:first-child {
+    margin-top: 0;
+}
+
+.col {
+    flex: 1;
+    padding: 0 15px;
+    min-width: 250px;
+}
+
+.col-last {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.radio-btn {
+    padding-right: 20px;
+}
+
+.btn {
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 16px 40px;
+    border-radius: 500px;
+    display: inline-block;
+    font-weight: 500;
+    transition: all 0.4s ease-in-out;
+    background: #f27221;
+    border: 2px solid #f27221;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background: transparent;
+    color: #f27221;
+}
