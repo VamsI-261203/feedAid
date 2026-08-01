@@ -92,6 +92,9 @@ public class MailConfig {
         props.put("mail.smtp.connectiontimeout", "5000");
         props.put("mail.smtp.timeout", "5000");
         props.put("mail.smtp.writetimeout", "5000");
+        props.put("mail.debug", "true");
+        props.put("mail.smtp.localhost", "gmail.com");
+        props.put("mail.from", username);
 
         return mailSender;
     }

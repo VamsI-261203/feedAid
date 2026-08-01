@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import com.shareandcare.backend.config.MailConfig;
 
 import jakarta.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class SmtpEmailProvider implements EmailService {
@@ -66,6 +68,102 @@ public class SmtpEmailProvider implements EmailService {
         sendHtmlEmail(to, subject, htmlBody);
     }
 
+    @Override
+    public void sendDeliveryConfirmationEmail(String donorEmail, String donorName,
+            String receiverName, String itemName, int quantity,
+            String foodType, LocalDateTime deliveredAt, Long claimId) {
+
+        String subject = "\uD83C\uDF89 Donation Successfully Delivered — Feed Aid";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+        String formattedDate = deliveredAt.format(formatter);
+
+        String htmlBody = "<!DOCTYPE html>" +
+                "<html><head><meta charset='UTF-8'></head><body style='margin:0; padding:0; background-color:#f4f4f4;'>" +
+                "<table width='100%' cellpadding='0' cellspacing='0' style='background-color:#f4f4f4; padding: 40px 0;'>" +
+                "<tr><td align='center'>" +
+                "<table width='600' cellpadding='0' cellspacing='0' style='background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);'>" +
+
+                // Header
+                "<tr><td style='background: linear-gradient(135deg, #f27221 0%, #e03a55 100%); padding: 30px 40px; text-align: center;'>" +
+                "<h1 style='margin:0; color:#ffffff; font-family: Arial, sans-serif; font-size: 28px; font-weight: 700;'>\uD83C\uDF72 Feed Aid</h1>" +
+                "<p style='margin:8px 0 0 0; color:rgba(255,255,255,0.9); font-family: Arial, sans-serif; font-size: 14px;'>Reducing Food Waste, Feeding People</p>" +
+                "</td></tr>" +
+
+                // Green success banner
+                "<tr><td style='background-color:#28a745; padding: 16px 40px; text-align: center;'>" +
+                "<p style='margin:0; color:#ffffff; font-family: Arial, sans-serif; font-size: 16px; font-weight: 600;'>✅ Donation Successfully Delivered!</p>" +
+                "</td></tr>" +
+
+                // Body
+                "<tr><td style='padding: 35px 40px;'>" +
+                "<p style='margin:0 0 20px 0; font-family: Arial, sans-serif; font-size: 16px; color:#333; line-height: 1.6;'>" +
+                "Hello <strong>" + escapeHtml(donorName) + "</strong>,</p>" +
+                "<p style='margin:0 0 25px 0; font-family: Arial, sans-serif; font-size: 16px; color:#333; line-height: 1.6;'>" +
+                "Great news! Your donation has been <strong>successfully received</strong> by the person in need. " +
+                "Here are the details:</p>" +
+
+                // Details table
+                "<table width='100%' cellpadding='0' cellspacing='0' style='background-color:#f8f9fa; border-radius:8px; border: 1px solid #e9ecef; margin: 0 0 25px 0;'>" +
+                "<tr><td style='padding: 20px 25px;'>" +
+                "<table width='100%' cellpadding='0' cellspacing='0'>" +
+
+                detailRow("\uD83D\uDC64 Receiver", escapeHtml(receiverName)) +
+                detailRow("\uD83C\uDF5C Food Items", escapeHtml(itemName != null ? itemName : "Donated Food")) +
+                detailRow("\uD83C\uDF7D Food Type", escapeHtml(foodType != null ? foodType : "N/A")) +
+                detailRow("\uD83D\uDCE6 Quantity", quantity + " pack" + (quantity > 1 ? "s" : "")) +
+                detailRow("\uD83D\uDCC5 Received On", formattedDate) +
+                detailRow("\uD83C\uDD94 Donation ID", "#" + claimId) +
+
+                "</table>" +
+                "</td></tr></table>" +
+
+                // Thank you message
+                "<div style='background-color:#fff3e0; border-left: 4px solid #f27221; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 0 0 25px 0;'>" +
+                "<p style='margin:0; font-family: Arial, sans-serif; font-size: 15px; color:#e65100; line-height: 1.6;'>" +
+                "\uD83D\uDC9A <strong>Thank you</strong> for helping Feed Aid reduce food waste and support people in need. " +
+                "Your contribution has made a real difference!</p>" +
+                "</div>" +
+
+                "<p style='margin:0; font-family: Arial, sans-serif; font-size: 15px; color:#666; line-height: 1.6;'>" +
+                "Warm regards,<br><strong style='color:#f27221;'>The Feed Aid Team</strong></p>" +
+                "</td></tr>" +
+
+                // Footer
+                "<tr><td style='background-color:#f8f9fa; padding: 20px 40px; text-align: center; border-top: 1px solid #e9ecef;'>" +
+                "<p style='margin:0; font-family: Arial, sans-serif; font-size: 12px; color:#999;'>" +
+                "&copy; " + java.time.Year.now().getValue() + " Feed-Aid. All rights reserved.</p>" +
+                "<p style='margin:5px 0 0 0; font-family: Arial, sans-serif; font-size: 11px; color:#bbb;'>" +
+                "This is an automated notification. Please do not reply to this email.</p>" +
+                "</td></tr>" +
+
+                "</table></td></tr></table></body></html>";
+
+        sendHtmlEmail(donorEmail, subject, htmlBody);
+    }
+
+    /**
+     * Helper to generate a single row in the delivery details table.
+     */
+    private String detailRow(String label, String value) {
+        return "<tr>" +
+                "<td style='padding: 8px 0; font-family: Arial, sans-serif; font-size: 14px; color:#888; width: 140px; vertical-align: top;'>" + label + "</td>" +
+                "<td style='padding: 8px 0; font-family: Arial, sans-serif; font-size: 14px; color:#333; font-weight: 600;'>" + value + "</td>" +
+                "</tr>";
+    }
+
+    /**
+     * Simple HTML escaping to prevent injection in email templates.
+     */
+    private String escapeHtml(String input) {
+        if (input == null) return "";
+        return input.replace("&", "&amp;")
+                     .replace("<", "&lt;")
+                     .replace(">", "&gt;")
+                     .replace("\"", "&quot;")
+                     .replace("'", "&#39;");
+    }
+
     private void sendHtmlEmail(String to, String subject, String htmlBody) {
         String fromEmail = mailConfig.getSenderEmail();
 
@@ -76,10 +174,10 @@ public class SmtpEmailProvider implements EmailService {
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
 
             if (fromEmail != null && !fromEmail.isEmpty()) {
-                helper.setFrom(fromEmail);
+                helper.setFrom(fromEmail, "Feed-Aid");
             }
 
             helper.setTo(to);

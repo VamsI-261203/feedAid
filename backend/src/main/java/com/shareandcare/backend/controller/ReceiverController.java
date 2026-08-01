@@ -1,12 +1,18 @@
 package com.shareandcare.backend.controller;
 
+import com.shareandcare.backend.model.Claim;
 import com.shareandcare.backend.model.Donor;
 import com.shareandcare.backend.model.Receiver;
+import com.shareandcare.backend.repository.ClaimRepository;
 import com.shareandcare.backend.repository.DonorRepository;
 import com.shareandcare.backend.repository.ReceiverRepository;
+import com.shareandcare.backend.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -19,6 +25,12 @@ public class ReceiverController {
 
     @Autowired
     private DonorRepository donorRepository;
+
+    @Autowired
+    private ClaimRepository claimRepository;
+
+    @Autowired
+    private DeliveryService deliveryService;
 
     @PostMapping
     public ResponseEntity<String> submitReceiver(@RequestBody Receiver receiver) {
@@ -36,16 +48,24 @@ public class ReceiverController {
 
         if (!matches.isEmpty()) {
             Donor matchedDonor = matches.get(0);
-            
+
             matchedDonor.setQuantity(matchedDonor.getQuantity() - receiver.getQuantity());
             donorRepository.save(matchedDonor);
+
+            // Create a Claim record to track this match
+            Claim claim = new Claim();
+            claim.setDonor(matchedDonor);
+            claim.setReceiver(savedReceiver);
+            claim.setQuantityClaimed(receiver.getQuantity());
+            claim.setStatus("CLAIMED");
+            claimRepository.save(claim);
 
             String matchMessage = "MATCH FOUND!\n\n"
                     + "Donor Name: " + matchedDonor.getName() + "\n"
                     + "Contact: " + matchedDonor.getContact() + "\n"
                     + "Address: " + matchedDonor.getAddress() + ", " + matchedDonor.getCity() + "\n\n"
                     + "Please contact them to collect your requested food.";
-            
+
             return ResponseEntity.ok(matchMessage);
         } else {
             return ResponseEntity.ok("Request submitted successfully!\n\nWe currently do not have a donor matching your exact needs in your city, but your request is saved and we will notify you when one becomes available.");
@@ -62,7 +82,7 @@ public class ReceiverController {
         }
 
         // Save the receiver
-        receiverRepository.save(receiver);
+        Receiver savedReceiver = receiverRepository.save(receiver);
 
         // Find the donor
         Donor donor = donorRepository.findById(donorId).orElse(null);
@@ -71,15 +91,84 @@ public class ReceiverController {
             donor.setQuantity(donor.getQuantity() - receiver.getQuantity());
             donorRepository.save(donor);
 
+            // Create a Claim record to track this claim
+            Claim claim = new Claim();
+            claim.setDonor(donor);
+            claim.setReceiver(savedReceiver);
+            claim.setQuantityClaimed(receiver.getQuantity());
+            claim.setStatus("CLAIMED");
+            claimRepository.save(claim);
+
             String matchMessage = "MATCH CONFIRMED!\n\n"
                     + "Donor Name: " + donor.getName() + "\n"
                     + "Contact: " + donor.getContact() + "\n"
                     + "Address: " + donor.getAddress() + ", " + donor.getCity() + "\n\n"
                     + "Please contact them to collect your requested food.";
-            
+
             return ResponseEntity.ok(matchMessage);
         } else {
             return ResponseEntity.badRequest().body("Failed to claim. The food might have already been claimed or is unavailable.");
+        }
+    }
+
+    /**
+     * Get all claims for a receiver (by email).
+     * Returns claim details with donor info and delivery status.
+     */
+    @GetMapping("/claims")
+    public ResponseEntity<?> getReceiverClaims(@RequestParam String email) {
+        List<Claim> claims = claimRepository.findByReceiverEmailOrderByClaimedAtDesc(email);
+
+        // Build response with all needed details (avoid sending sensitive donor data)
+        List<Map<String, Object>> claimList = claims.stream().map(claim -> {
+            Map<String, Object> claimMap = new HashMap<>();
+            claimMap.put("id", claim.getId());
+            claimMap.put("quantityClaimed", claim.getQuantityClaimed());
+            claimMap.put("status", claim.getStatus());
+            claimMap.put("claimedAt", claim.getClaimedAt());
+            claimMap.put("deliveredAt", claim.getDeliveredAt());
+
+            // Donor details (safe to share)
+            Map<String, Object> donorInfo = new HashMap<>();
+            donorInfo.put("name", claim.getDonor().getName());
+            donorInfo.put("itemName", claim.getDonor().getItemName());
+            donorInfo.put("choice", claim.getDonor().getChoice());
+            donorInfo.put("type", claim.getDonor().getType());
+            donorInfo.put("city", claim.getDonor().getCity());
+            donorInfo.put("photoBase64", claim.getDonor().getPhotoBase64());
+            claimMap.put("donor", donorInfo);
+
+            // Receiver name
+            claimMap.put("receiverName", claim.getReceiver().getName());
+
+            return claimMap;
+        }).toList();
+
+        return ResponseEntity.ok(claimList);
+    }
+
+    /**
+     * Confirm delivery of a claimed donation.
+     * Sends a professional HTML email to the donor.
+     * 
+     * POST /api/receivers/claims/{claimId}/confirm-delivery?email=receiver@email.com
+     */
+    @PostMapping("/claims/{claimId}/confirm-delivery")
+    public ResponseEntity<?> confirmDelivery(
+            @PathVariable Long claimId,
+            @RequestParam String email) {
+        try {
+            Claim confirmedClaim = deliveryService.confirmDelivery(claimId, email);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Delivery confirmed successfully! The donor has been notified via email.");
+            response.put("claimId", confirmedClaim.getId());
+            response.put("status", confirmedClaim.getStatus());
+            response.put("deliveredAt", confirmedClaim.getDeliveredAt());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 
