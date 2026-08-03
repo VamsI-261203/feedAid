@@ -1,91 +1,484 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* Center the container properly inside .main */
 .main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fffbf4;
-    
+  background: #fffbf4;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
 }
 
-.contact-box {
-    width: 60%;
-    height: 115vh;
-    margin: 40px 0px;
-    box-shadow: 20px;
-    box-shadow: 0 4px 50px rgba(0, 0, 0, 0.25);
+.contact-container {
+  width: 1100px;
+  max-width: 95%;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(242, 114, 33, 0.08), 0 5px 20px rgba(0, 0, 0, 0.03);
+  display: flex;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: 20px 0;
 }
 
-.contact-header {
-    position: relative;
-    display: flex;
+/* ──────────────── LEFT: Contact Info Card ──────────────── */
+.contact-info-section {
+  width: 40%;
+  background: linear-gradient(135deg, #d1560f 0%, #9e3800 100%);
+  padding: 50px 40px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle glowing backdrop pattern */
+.contact-info-section::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -20%;
+  width: 250px;
+  height: 250px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  filter: blur(40px);
+}
+
+.info-header h2 {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+}
+
+.info-header p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.info-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin-top: 50px;
+  margin-bottom: auto;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.info-icon-wrapper {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.info-item:hover .info-icon-wrapper {
+  background: #ffffff;
+  color: #d1560f;
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.info-svg {
+  width: 22px;
+  height: 22px;
+}
+
+.info-text h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.info-text p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ──────────────── RIGHT: Contact Form Card ──────────────── */
+.contact-form-section {
+  width: 60%;
+  padding: 55px 60px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin: 0 0 6px 0;
+}
+
+.form-header p {
+  font-size: 13px;
+  color: #888888;
+  margin: 0;
+}
+
+/* Form Grid / Layout Aligned */
+.form-grid-row {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a4a4a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.form-input-control, .form-textarea-control {
+  width: 100%;
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-size: 14px;
+  color: #1e1e1e;
+  outline: none;
+  background: #fafafa;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.form-input-control::placeholder, .form-textarea-control::placeholder {
+  color: #b8b8b8;
+}
+
+.form-input-control:focus, .form-textarea-control:focus {
+  border-color: #f27221;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(242, 114, 33, 0.08);
+}
+
+/* Validation styles */
+.form-input-control.is-invalid, .form-textarea-control.is-invalid {
+  border-color: #e03a55;
+  background-color: #fffafb;
+}
+
+.form-input-control.is-invalid:focus, .form-textarea-control.is-invalid:focus {
+  box-shadow: 0 0 0 4px rgba(224, 58, 85, 0.08);
+}
+
+.form-input-control.is-valid, .form-textarea-control.is-valid {
+  border-color: #28a745;
+}
+
+.field-error {
+  color: #e03a55;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 2px;
+  animation: fadeInDown 0.3s ease;
+}
+
+/* Textarea Customization */
+.form-textarea-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Radio Button Group */
+.radio-group-container {
+  display: flex;
+  gap: 30px;
+  padding: 6px 0;
+}
+
+.radio-label-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #333333;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.radio-label-wrapper input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  background-color: #fafafa;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.radio-label-wrapper:hover input ~ .radio-custom {
+  border-color: #f27221;
+}
+
+.radio-label-wrapper input:checked ~ .radio-custom {
+  background-color: #f27221;
+  border-color: #f27221;
+}
+
+.radio-custom::after {
+  content: '';
+  position: absolute;
+  display: none;
+  top: 5px;
+  left: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+}
+
+.radio-label-wrapper input:checked ~ .radio-custom::after {
+  display: block;
+}
+
+/* Submit Button & Alignment */
+.form-submit-container {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-submit-btn {
+  background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  font-size: 15px;
+  padding: 14px 36px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f27221 0%, #e03a55 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(242, 114, 33, 0.25);
+}
+
+.form-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.form-submit-btn:disabled {
+  background: #e8e8e8;
+  color: #a0a0a0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.spinner-icon {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+/* Toast Notification (matching redesigned Login toast) */
+.toast-notification {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10000;
+  animation: slideInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 90%;
+  width: 460px;
+  box-sizing: border-box;
+  border-left: 5px solid;
+}
+
+.toast-success {
+  border-left-color: #28a745;
+}
+
+.toast-error {
+  border-left-color: #e03a55;
+}
+
+.toast-icon {
+  font-size: 20px;
+}
+
+.toast-message {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  flex-grow: 1;
+  line-height: 1.4;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #aaaaaa;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.toast-close:hover {
+  color: #333;
+}
+
+/* ──────────────── KEYFRAMES ──────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ──────────────── RESPONSIVE MEDIA QUERIES ──────────────── */
+@media (max-width: 1024px) {
+  .contact-container {
+    width: 95%;
+  }
+}
+
+@media (max-width: 850px) {
+  .contact-container {
+    flex-direction: column;
+    margin: 20px 0;
+  }
+
+  .contact-info-section {
     width: 100%;
-    height: 15vh;
-    justify-content: center;
-}
+    padding: 40px;
+    box-sizing: border-box;
+  }
 
-.logo1 {
-    max-height: 96px;
-    width: 100px;
-}
-
-.form-content {
-    position: relative;
-    display: flex;
-    width: 100%;
-    height: 65vh;
-    justify-content: center;
-}
-
-.row {
+  .info-details-list {
     margin-top: 30px;
+    gap: 24px;
+  }
+
+  .contact-form-section {
+    width: 100%;
+    padding: 40px 30px;
+    box-sizing: border-box;
+  }
 }
 
-.radio-btn {
-    padding-right: 20px;
-}
-
-.col-last {
-    display: flex;
+@media (max-width: 580px) {
+  .form-grid-row {
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .contact-form-section {
+    padding: 30px 20px;
+  }
+  
+  .form-submit-container {
+    justify-content: stretch;
+  }
+  
+  .form-submit-btn {
+    width: 100%;
     justify-content: center;
-}
-
-.btn {
-    color: #fff;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    padding: 16px 40px;
-    border-radius: 500px;
-    display: inline-block;
-    font-weight: 500;
-    transition: all 0.4s ease-in-out;
-    background-size: 152% 100%;
-    background: #f27221;
-    border: 2px solid #f27221;
-}
-
-.btn:hover {
-    background: transparent;
-    border-color: #f27221;
-    color: #f27221;
-}
-
-#btn {
-    color: #fff;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    padding: 16px 40px;
-    border-radius: 500px;
-    display: inline-block;
-    font-weight: 500;
-    transition: all 0.4s ease-in-out;
-    background-size: 152% 100%;
-    background: #f27221;
-    border: 2px solid #f27221;
-}
-
-#btn:hover {
-    background: transparent;
-    border-color: #f27221;
-    color: #f27221;
+  }
 }
