@@ -11,13 +11,26 @@ const ForgotPassword = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        console.log("Sending Forgot Password Request with payload:", { email });
         try {
             const response = await axios.post('http://localhost:8080/api/auth/forgot-password', { email });
+            console.log("Forgot Password Response Success:", response.data);
             alert(response.data.message || "OTP sent successfully!");
             navigate(`/reset-password?email=${encodeURIComponent(email)}`);
         } catch (error) {
-            console.error(error);
-            alert("Request failed: " + (error.response?.data?.error || "Unknown error"));
+            console.error("Axios Forgot Password Error Details:", error);
+            if (error.response) {
+                console.error("Response status:", error.response.status);
+                console.error("Response data:", error.response.data);
+                const errMsg = error.response.data?.error || error.response.data?.message || JSON.stringify(error.response.data);
+                alert(`Request failed (Status ${error.response.status}): ${errMsg}`);
+            } else if (error.request) {
+                console.error("No response received for request:", error.request);
+                alert("Request failed: No response received from server. Please verify if the Spring Boot backend is active on http://localhost:8080.");
+            } else {
+                console.error("Request configuration error:", error.message);
+                alert(`Request failed: ${error.message}`);
+            }
         } finally {
             setLoading(false);
         }

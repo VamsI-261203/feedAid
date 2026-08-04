@@ -7,6 +7,7 @@ const Profile = () => {
     const [user, setUser] = useState(null);
     const [donations, setDonations] = useState([]);
     const [claims, setClaims] = useState([]);
+    const [donorClaims, setDonorClaims] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,6 +27,9 @@ const Profile = () => {
 
                 const receiverRes = await axios.get(`http://localhost:8080/api/receivers/history?email=${email}`);
                 setClaims(receiverRes.data);
+
+                const donorClaimsRes = await axios.get(`http://localhost:8080/api/receivers/claims/donor?email=${email}`);
+                setDonorClaims(donorClaimsRes.data);
             } catch (error) {
                 console.error("Error fetching history", error);
             }
@@ -81,6 +85,49 @@ const Profile = () => {
                                 <p style={{ margin: '0 0 5px 0', fontSize: '0.9rem', color: '#555' }}><strong>Quantity:</strong> {d.initialQuantity || d.quantity} people</p>
                                 <p style={{ margin: '0 0 5px 0', fontSize: '0.9rem', color: '#555' }}><strong>Status:</strong> {d.quantity === 0 ? 'Fully Claimed' : 'Available/Partial'}</p>
                                 <p style={{ margin: '0 0 0 0', fontSize: '0.8rem', color: '#999' }}>{d.createdAt ? new Date(d.createdAt).toLocaleDateString() : 'Recent'}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                <h3 style={{ fontSize: '1.8rem', color: '#333', marginBottom: '20px', marginTop: '30px' }}>Claims on Your Donations</h3>
+                {donorClaims.length === 0 ? (
+                    <p style={{ color: '#777', fontStyle: 'italic', marginBottom: '30px' }}>No claims have been made on your donations yet.</p>
+                ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+                        {donorClaims.map((c, index) => (
+                            <div key={index} style={{
+                                backgroundColor: '#fff', borderRadius: '10px', padding: '20px',
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column',
+                                border: c.status === 'DELIVERED' ? '2px solid #28a745' : '1px solid #eee'
+                            }}>
+                                <h4 style={{ color: '#f27221', margin: '0 0 10px 0', fontSize: '1.2rem' }}>{c.donor?.itemName || 'Food Item'}</h4>
+                                <p style={{ margin: '0 0 5px 0', fontSize: '0.9rem', color: '#555' }}><strong>Receiver Name:</strong> {c.receiver?.name}</p>
+                                <p style={{ margin: '0 0 5px 0', fontSize: '0.9rem', color: '#555' }}><strong>Receiver Contact:</strong> {c.receiver?.contact}</p>
+                                <p style={{ margin: '0 0 5px 0', fontSize: '0.9rem', color: '#555' }}><strong>Quantity Claimed:</strong> {c.quantityClaimed} pack{c.quantityClaimed > 1 ? 's' : ''}</p>
+                                <p style={{ margin: '0 0 12px 0', fontSize: '0.9rem', color: '#555' }}>
+                                    <strong>Status:</strong>{' '}
+                                    <span style={{
+                                        display: 'inline-block', padding: '2px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: '600',
+                                        backgroundColor: c.status === 'DELIVERED' ? '#d4edda' : '#fff3cd',
+                                        color: c.status === 'DELIVERED' ? '#155724' : '#856404'
+                                    }}>
+                                        {c.status === 'DELIVERED' ? 'Delivered ✓' : 'Accepted'}
+                                    </span>
+                                </p>
+
+                                <button
+                                    onClick={() => navigate(`/chat/${c.chatRoomId}`)}
+                                    className="btn"
+                                    style={{
+                                        marginTop: 'auto', padding: '10px 20px', border: '1px solid #f27221', borderRadius: '8px',
+                                        fontSize: '14px', fontWeight: '600', cursor: 'pointer',
+                                        backgroundColor: '#fff', color: '#f27221', transition: 'all 0.3s',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                                    }}
+                                >
+                                    💬 {c.status === 'DELIVERED' ? 'View Chat (Read-Only)' : 'Open Chat'}
+                                </button>
                             </div>
                         ))}
                     </div>

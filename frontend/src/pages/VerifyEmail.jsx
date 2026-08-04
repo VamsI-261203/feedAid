@@ -33,13 +33,26 @@ const VerifyEmail = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        console.log("Sending Verify Email Request with payload:", { email, otp });
         try {
             const response = await axios.post('http://localhost:8080/api/auth/verify-email', { email, otp });
+            console.log("Verify Email Response Success:", response.data);
             alert(response.data.message || "Email verified successfully!");
             navigate('/login');
         } catch (error) {
-            console.error(error);
-            alert("Verification failed: " + (error.response?.data?.error || "Unknown error"));
+            console.error("Axios Verify Email Error Details:", error);
+            if (error.response) {
+                console.error("Response status:", error.response.status);
+                console.error("Response data:", error.response.data);
+                const errMsg = error.response.data?.error || error.response.data?.message || JSON.stringify(error.response.data);
+                alert(`Verification failed (Status ${error.response.status}): ${errMsg}`);
+            } else if (error.request) {
+                console.error("No response received for request:", error.request);
+                alert("Verification failed: No response received from server. Please verify if the Spring Boot backend is active on http://localhost:8080.");
+            } else {
+                console.error("Request configuration error:", error.message);
+                alert(`Verification failed: ${error.message}`);
+            }
         } finally {
             setLoading(false);
         }
@@ -48,13 +61,26 @@ const VerifyEmail = () => {
     const handleResend = async () => {
         if (resendTimer > 0) return;
         setLoading(true);
+        console.log("Sending Resend Verification OTP Request with payload:", { email });
         try {
             const response = await axios.post('http://localhost:8080/api/auth/resend-verification-otp', { email });
+            console.log("Resend Verification OTP Response Success:", response.data);
             alert(response.data.message || "OTP resent successfully!");
             setResendTimer(60);
         } catch (error) {
-            console.error(error);
-            alert("Resend failed: " + (error.response?.data?.error || "Unknown error"));
+            console.error("Axios Resend Verification OTP Error Details:", error);
+            if (error.response) {
+                console.error("Response status:", error.response.status);
+                console.error("Response data:", error.response.data);
+                const errMsg = error.response.data?.error || error.response.data?.message || JSON.stringify(error.response.data);
+                alert(`Resend failed (Status ${error.response.status}): ${errMsg}`);
+            } else if (error.request) {
+                console.error("No response received for request:", error.request);
+                alert("Resend failed: No response received from server. Please verify if the Spring Boot backend is active on http://localhost:8080.");
+            } else {
+                console.error("Request configuration error:", error.message);
+                alert(`Resend failed: ${error.message}`);
+            }
         } finally {
             setLoading(false);
         }

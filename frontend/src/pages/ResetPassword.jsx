@@ -22,13 +22,26 @@ const ResetPassword = () => {
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
         setLoading(true);
+        console.log("Sending Verify Reset OTP Request with payload:", { email, otp });
         try {
             const response = await axios.post('http://localhost:8080/api/auth/verify-reset-otp', { email, otp });
+            console.log("Verify Reset OTP Response Success:", response.data);
             alert(response.data.message || "OTP verified! Please enter your new password.");
             setStep(2);
         } catch (error) {
-            console.error(error);
-            alert("Verification failed: " + (error.response?.data?.error || "Unknown error"));
+            console.error("Axios Verify Reset OTP Error Details:", error);
+            if (error.response) {
+                console.error("Response status:", error.response.status);
+                console.error("Response data:", error.response.data);
+                const errMsg = error.response.data?.error || error.response.data?.message || JSON.stringify(error.response.data);
+                alert(`Verification failed (Status ${error.response.status}): ${errMsg}`);
+            } else if (error.request) {
+                console.error("No response received for request:", error.request);
+                alert("Verification failed: No response received from server. Please verify if the Spring Boot backend is active on http://localhost:8080.");
+            } else {
+                console.error("Request configuration error:", error.message);
+                alert(`Verification failed: ${error.message}`);
+            }
         } finally {
             setLoading(false);
         }
@@ -37,13 +50,26 @@ const ResetPassword = () => {
     const handleResetPassword = async (e) => {
         e.preventDefault();
         setLoading(true);
+        console.log("Sending Reset Password Request with payload:", { email, otp, newPassword });
         try {
             const response = await axios.post('http://localhost:8080/api/auth/reset-password', { email, otp, newPassword });
+            console.log("Reset Password Response Success:", response.data);
             alert(response.data.message || "Password reset successfully!");
             navigate('/login');
         } catch (error) {
-            console.error(error);
-            alert("Reset failed: " + (error.response?.data?.error || "Unknown error"));
+            console.error("Axios Reset Password Error Details:", error);
+            if (error.response) {
+                console.error("Response status:", error.response.status);
+                console.error("Response data:", error.response.data);
+                const errMsg = error.response.data?.error || error.response.data?.message || JSON.stringify(error.response.data);
+                alert(`Reset failed (Status ${error.response.status}): ${errMsg}`);
+            } else if (error.request) {
+                console.error("No response received for request:", error.request);
+                alert("Reset failed: No response received from server. Please verify if the Spring Boot backend is active on http://localhost:8080.");
+            } else {
+                console.error("Request configuration error:", error.message);
+                alert(`Reset failed: ${error.message}`);
+            }
         } finally {
             setLoading(false);
         }

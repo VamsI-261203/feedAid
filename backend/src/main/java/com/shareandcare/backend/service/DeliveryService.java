@@ -22,6 +22,9 @@ public class DeliveryService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ChatService chatService;
+
     /**
      * Confirm delivery of a claimed donation.
      * 
@@ -49,6 +52,9 @@ public class DeliveryService {
         claim.setStatus("DELIVERED");
         claim.setDeliveredAt(LocalDateTime.now());
         Claim savedClaim = claimRepository.save(claim);
+
+        // Deactivate associated private chat room (disable further messages)
+        chatService.deactivateChatRoom(claimId);
 
         logger.info("Delivery confirmed for claim #{} by receiver: {}", claimId, receiverEmail);
 

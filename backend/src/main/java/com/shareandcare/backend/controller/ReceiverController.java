@@ -7,6 +7,8 @@ import com.shareandcare.backend.repository.ClaimRepository;
 import com.shareandcare.backend.repository.DonorRepository;
 import com.shareandcare.backend.repository.ReceiverRepository;
 import com.shareandcare.backend.service.DeliveryService;
+import com.shareandcare.backend.service.ChatService;
+import com.shareandcare.backend.repository.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,12 @@ public class ReceiverController {
 
     @Autowired
     private DeliveryService deliveryService;
+
+    @Autowired
+    private ChatService chatService;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
 
     @PostMapping
     public ResponseEntity<String> submitReceiver(@RequestBody Receiver receiver) {
@@ -57,8 +65,11 @@ public class ReceiverController {
             claim.setDonor(matchedDonor);
             claim.setReceiver(savedReceiver);
             claim.setQuantityClaimed(receiver.getQuantity());
-            claim.setStatus("CLAIMED");
+            claim.setStatus("ACCEPTED");
             claimRepository.save(claim);
+
+            // Auto-create private chat room for this accepted claim
+            chatService.createChatRoom(claim);
 
             String matchMessage = "MATCH FOUND!\n\n"
                     + "Donor Name: " + matchedDonor.getName() + "\n"
@@ -96,8 +107,11 @@ public class ReceiverController {
             claim.setDonor(donor);
             claim.setReceiver(savedReceiver);
             claim.setQuantityClaimed(receiver.getQuantity());
-            claim.setStatus("CLAIMED");
+            claim.setStatus("ACCEPTED");
             claimRepository.save(claim);
+
+            // Auto-create private chat room for this accepted claim
+            chatService.createChatRoom(claim);
 
             String matchMessage = "MATCH CONFIRMED!\n\n"
                     + "Donor Name: " + donor.getName() + "\n"
@@ -123,6 +137,10 @@ public class ReceiverController {
         List<Map<String, Object>> claimList = claims.stream().map(claim -> {
             Map<String, Object> claimMap = new HashMap<>();
             claimMap.put("id", claim.getId());
+            Long chatRoomId = chatRoomRepository.findByClaimId(claim.getId())
+                    .map(com.shareandcare.backend.model.ChatRoom::getId)
+                    .orElse(null);
+            claimMap.put("chatRoomId", chatRoomId);
             claimMap.put("quantityClaimed", claim.getQuantityClaimed());
             claimMap.put("status", claim.getStatus());
             claimMap.put("claimedAt", claim.getClaimedAt());
@@ -176,5 +194,45 @@ public class ReceiverController {
     public ResponseEntity<List<Receiver>> getReceiverHistory(@RequestParam String email) {
         List<Receiver> history = receiverRepository.findByEmailOrderByCreatedAtDesc(email);
         return ResponseEntity.ok(history);
+    }
+
+    /**
+     * Get all claims made on a donor's donations (by email).
+     * Used to show claim list on donor's profile.
+     */
+    @GetMapping("/claims/donor")
+    public ResponseEntity<?> getDonorClaims(@RequestParam String email) {
+        List<Claim> claims = claimRepository.findByDonorEmailOrderByClaimedAtDesc(email);
+
+        List<Map<String, Object>> claimList = claims.stream().map(claim -> {
+            Map<String, Object> claimMap = new HashMap<>();
+            claimMap.put("id", claim.getId());
+            Long chatRoomId = chatRoomRepository.findByClaimId(claim.getId())
+                    .map(com.shareandcare.backend.model.ChatRoom::getId)
+                    .orElse(null);
+            claimMap.put("chatRoomId", chatRoomId);
+            claimMap.put("quantityClaimed", claim.getQuantityClaimed());
+            claimMap.put("status", claim.getStatus());
+            claimMap.put("claimedAt", claim.getClaimedAt());
+            claimMap.put("deliveredAt", claim.getDeliveredAt());
+
+            // Receiver details
+            Map<String, Object> receiverInfo = new HashMap<>();
+            receiverInfo.put("name", claim.getReceiver().getName());
+            receiverInfo.put("contact", claim.getReceiver().getContact());
+            receiverInfo.put("email", claim.getReceiver().getEmail());
+            claimMap.put("receiver", receiverInfo);
+
+            // Donor item details
+            Map<String, Object> donorInfo = new HashMap<>();
+            donorInfo.put("itemName", claim.getDonor().getItemName());
+            donorInfo.put("choice", claim.getDonor().getChoice());
+            donorInfo.put("type", claim.getDonor().getType());
+            claimMap.put("donor", donorInfo);
+
+            return claimMap;
+        }).toList();
+
+        return ResponseEntity.ok(claimList);
     }
 }

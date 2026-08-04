@@ -85,20 +85,30 @@ const Login = () => {
             
             // Redirect after 1.5 seconds so user can see success toast
             setTimeout(() => {
-                navigate('/');
+                navigate('/profile');
             }, 1200);
             
         } catch (error) {
-            console.error(error);
-            const errorMsg = error.response?.data?.error || "Login failed: Invalid email or password";
-            
-            if (errorMsg.toLowerCase().includes("verify your email")) {
-                showToast(errorMsg + " Redirecting to verification page...", 'warning');
-                setTimeout(() => {
-                    navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
-                }, 2000);
+            console.error("Axios Login Error Details:", error);
+            if (error.response) {
+                console.error("Response status:", error.response.status);
+                console.error("Response data:", error.response.data);
+                const errorMsg = error.response.data?.error || error.response.data?.message || "Login failed: Invalid email or password";
+                
+                if (errorMsg.toLowerCase().includes("verify your email")) {
+                    showToast(errorMsg + " Redirecting to verification page...", 'warning');
+                    setTimeout(() => {
+                        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+                    }, 2000);
+                } else {
+                    showToast(errorMsg, 'error');
+                }
+            } else if (error.request) {
+                console.error("No response received for request:", error.request);
+                showToast("Login failed: No response received from server. Please check if your Spring Boot backend is active on http://localhost:8080.", 'error');
             } else {
-                showToast(errorMsg, 'error');
+                console.error("Request configuration error:", error.message);
+                showToast(`Login failed: ${error.message}`, 'error');
             }
         } finally {
             setLoading(false);

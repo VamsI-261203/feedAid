@@ -108,11 +108,11 @@ const Receiver = () => {
 
     const getStatusBadge = (status) => {
         const styles = {
-            CLAIMED: { bg: '#fff3cd', color: '#856404', border: '#ffeeba', label: '⏳ Claimed' },
+            ACCEPTED: { bg: '#fff3cd', color: '#856404', border: '#ffeeba', label: '⏳ Accepted' },
             DELIVERED: { bg: '#d4edda', color: '#155724', border: '#c3e6cb', label: '✅ Delivered' },
             CANCELLED: { bg: '#f8d7da', color: '#721c24', border: '#f5c6cb', label: '❌ Cancelled' }
         };
-        const s = styles[status] || styles.CLAIMED;
+        const s = styles[status] || styles.ACCEPTED;
         return (
             <span style={{
                 display: 'inline-block',
@@ -245,41 +245,57 @@ const Receiver = () => {
                                             <p style={{ margin: '0' }}><strong>Claim ID:</strong> #{claim.id}</p>
                                         </div>
 
-                                        {/* Action Button */}
+                                        {/* Action Buttons */}
                                         <div style={{ marginTop: 'auto' }}>
-                                            {claim.status === 'CLAIMED' && (
-                                                <button
-                                                    onClick={() => setConfirmDialog(claim.id)}
-                                                    disabled={confirmingId === claim.id}
-                                                    style={{
-                                                        width: '100%', padding: '12px', border: 'none', borderRadius: '8px',
-                                                        fontSize: '15px', fontWeight: '600', cursor: 'pointer',
-                                                        backgroundColor: confirmingId === claim.id ? '#ccc' : '#28a745',
-                                                        color: '#fff', transition: 'background-color 0.3s',
-                                                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
-                                                    }}
-                                                >
-                                                    {confirmingId === claim.id ? (
-                                                        <>
-                                                            <span style={{
-                                                                width: '18px', height: '18px', border: '3px solid rgba(255,255,255,0.3)',
-                                                                borderTop: '3px solid #fff', borderRadius: '50%',
-                                                                animation: 'spin 1s linear infinite', display: 'inline-block'
-                                                            }} />
-                                                            Confirming...
-                                                        </>
-                                                    ) : (
-                                                        '✅ Confirm Delivery'
-                                                    )}
-                                                </button>
+                                            {claim.status === 'ACCEPTED' && (
+                                                <div style={{ display: 'flex', gap: '10px' }}>
+                                                    <button
+                                                        onClick={() => navigate(`/chat/${claim.chatRoomId}`)}
+                                                        style={{
+                                                            flex: 1, padding: '12px', border: '1px solid #f27221', borderRadius: '8px',
+                                                            fontSize: '14px', fontWeight: '600', cursor: 'pointer',
+                                                            backgroundColor: '#fff', color: '#f27221', transition: 'all 0.3s',
+                                                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                                                        }}
+                                                    >
+                                                        💬 Chat
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setConfirmDialog(claim.id)}
+                                                        disabled={confirmingId === claim.id}
+                                                        style={{
+                                                            flex: 1.5, padding: '12px', border: 'none', borderRadius: '8px',
+                                                            fontSize: '14px', fontWeight: '600', cursor: 'pointer',
+                                                            backgroundColor: confirmingId === claim.id ? '#ccc' : '#28a745',
+                                                            color: '#fff', transition: 'background-color 0.3s',
+                                                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                                                        }}
+                                                    >
+                                                        {confirmingId === claim.id ? 'Confirming...' : '✅ Confirm Received'}
+                                                    </button>
+                                                </div>
                                             )}
                                             {claim.status === 'DELIVERED' && (
-                                                <div style={{
-                                                    width: '100%', padding: '12px', borderRadius: '8px',
-                                                    backgroundColor: '#d4edda', color: '#155724', textAlign: 'center',
-                                                    fontSize: '15px', fontWeight: '600', border: '1px solid #c3e6cb'
-                                                }}>
-                                                    ✅ Delivered — Donor Notified
+                                                <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
+                                                    <button
+                                                        onClick={() => navigate(`/chat/${claim.chatRoomId}`)}
+                                                        style={{
+                                                            width: '100%', padding: '12px', border: '1px solid #999', borderRadius: '8px',
+                                                            fontSize: '14px', fontWeight: '600', cursor: 'pointer',
+                                                            backgroundColor: '#fff', color: '#666', transition: 'all 0.3s',
+                                                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                                                        }}
+                                                    >
+                                                        💬 View Chat (Read-Only)
+                                                    </button>
+                                                    <div style={{
+                                                        width: '100%', padding: '12px', borderRadius: '8px',
+                                                        backgroundColor: '#d4edda', color: '#155724', textAlign: 'center',
+                                                        fontSize: '14px', fontWeight: '600', border: '1px solid #c3e6cb',
+                                                        boxSizing: 'border-box'
+                                                    }}>
+                                                        ✅ Delivered — Donor Notified
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
