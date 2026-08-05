@@ -3,9 +3,11 @@ package com.shareandcare.backend.service;
 import com.shareandcare.backend.model.ChatMessage;
 import com.shareandcare.backend.model.ChatRoom;
 import com.shareandcare.backend.model.Claim;
+import com.shareandcare.backend.model.Donor;
 import com.shareandcare.backend.repository.ChatMessageRepository;
 import com.shareandcare.backend.repository.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,9 @@ public class ChatService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+
+    @Autowired(required = false)
+    private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     public ChatService(ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository) {
@@ -31,7 +36,68 @@ public class ChatService {
     public ChatRoom createChatRoom(Claim claim) {
         // Double check if a room already exists for this claim
         return chatRoomRepository.findByClaimId(claim.getId())
-                .orElseGet(() -> chatRoomRepository.save(new ChatRoom(claim)));
+                .orElseGet(() -> {
+                    ChatRoom room = chatRoomRepository.save(new ChatRoom(claim));
+                    try {
+                        sendSystemPickupAddressMessage(room, claim);
+                    } catch (Exception e) {
+                        System.err.println("Failed to create system pickup message: " + e.getMessage());
+                    }
+                    return room;
+                });
+    }
+
+    private void sendSystemPickupAddressMessage(ChatRoom room, Claim claim) {
+        Donor donor = claim.getDonor();
+        String address = donor.getAddress();
+        String city = donor.getCity();
+        String state = donor.getState();
+        String zipcode = donor.getZipcode();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("System Message:\n");
+        sb.append("The donor has shared the pickup location for this donation.\n\n");
+        sb.append("Pickup Address:\n");
+        if (address != null && !address.trim().isEmpty()) {
+            sb.append(address.trim()).append("\n");
+        }
+        if (city != null && !city.trim().isEmpty()) {
+            sb.append(city.trim());
+        }
+        if (state != null && !state.trim().isEmpty()) {
+            if (city != null && !city.trim().isEmpty()) {
+                sb.append(", ");
+            }
+            sb.append(state.trim());
+        }
+        if (zipcode != null && !zipcode.trim().isEmpty()) {
+            if ((city != null && !city.trim().isEmpty()) || (state != null && !state.trim().isEmpty())) {
+                sb.append(" - ");
+            }
+            sb.append(zipcode.trim());
+        }
+        sb.append("\n\n");
+        sb.append("Please coordinate using this address for food collection.");
+
+        ChatMessage systemMsg = new ChatMessage();
+        systemMsg.setChatRoom(room);
+        systemMsg.setDonationId(donor.getId());
+        systemMsg.setSenderEmail("SYSTEM");
+        systemMsg.setReceiverEmail("ALL");
+        systemMsg.setMessage(sb.toString());
+        systemMsg.setSenderType("SYSTEM");
+        systemMsg.setTimestamp(LocalDateTime.now());
+        systemMsg.setReadStatus(true);
+        
+        chatMessageRepository.save(systemMsg);
+
+        if (messagingTemplate != null) {
+            try {
+                messagingTemplate.convertAndSend("/topic/chat/" + room.getId(), systemMsg);
+            } catch (Exception e) {
+                System.err.println("Failed to broadcast system message: " + e.getMessage());
+            }
+        }
     }
 
     /**

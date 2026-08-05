@@ -286,6 +286,7 @@ const ChatPage = () => {
                                     <div className="messages-list">
                                         {messages.map((msg, index) => {
                                             const isSentByMe = user && equalsIgnoreCase(msg.senderEmail, user.email);
+                                            const isSystem = msg.senderType === 'SYSTEM' || equalsIgnoreCase(msg.senderEmail, 'SYSTEM');
                                             const showDateDivider = index === 0 || 
                                                 formatDate(messages[index - 1].timestamp) !== formatDate(msg.timestamp);
 
@@ -296,12 +297,24 @@ const ChatPage = () => {
                                                             <span>{formatDate(msg.timestamp)}</span>
                                                         </div>
                                                     )}
-                                                    <div className={`message-bubble-wrapper ${isSentByMe ? 'sent' : 'received'}`}>
-                                                        <div className="message-bubble">
-                                                            <p className="message-text">{msg.message}</p>
-                                                            <span className="message-time">{formatTime(msg.timestamp)}</span>
+                                                    {isSystem ? (
+                                                        <div className="system-message-wrapper">
+                                                            <div className="system-message-bubble">
+                                                                <div className="system-message-header">
+                                                                    <span className="system-message-badge">📍 System Message</span>
+                                                                </div>
+                                                                <p className="system-message-text">{msg.message}</p>
+                                                                <span className="system-message-time">{formatTime(msg.timestamp)}</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    ) : (
+                                                        <div className={`message-bubble-wrapper ${isSentByMe ? 'sent' : 'received'}`}>
+                                                            <div className="message-bubble">
+                                                                <p className="message-text">{msg.message}</p>
+                                                                <span className="message-time">{formatTime(msg.timestamp)}</span>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             );
                                         })}

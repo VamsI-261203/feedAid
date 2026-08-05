@@ -341,6 +341,63 @@
     color: #999999;
 }
 
+/* System Messages */
+.system-message-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 16px 0;
+}
+
+.system-message-bubble {
+    background: #f8f9fa;
+    border: 1.5px dashed #f27221;
+    border-radius: 16px;
+    padding: 18px 24px;
+    width: 100%;
+    max-width: 90%;
+    color: #495057;
+    box-shadow: 0 4px 15px rgba(242, 114, 33, 0.04);
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.system-message-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.system-message-badge {
+    background-color: rgba(242, 114, 33, 0.08);
+    color: #f27221;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.system-message-text {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-line;
+    color: #333333;
+}
+
+.system-message-time {
+    font-size: 10px;
+    color: #868e96;
+    display: block;
+    margin-top: 8px;
+    text-align: right;
+}
+
 /* Typing / Input Bar */
 .message-input-area {
     padding: 18px 24px;

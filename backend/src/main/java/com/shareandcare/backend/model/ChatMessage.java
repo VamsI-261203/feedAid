@@ -27,6 +27,9 @@ public class ChatMessage {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
 
+    @Column(name = "sender_type", nullable = false)
+    private String senderType = "USER";
+
     @Column(nullable = false)
     private LocalDateTime timestamp = LocalDateTime.now();
 
@@ -42,6 +45,7 @@ public class ChatMessage {
         this.senderEmail = senderEmail;
         this.receiverEmail = receiverEmail;
         this.message = message;
+        this.senderType = "USER";
         this.timestamp = LocalDateTime.now();
         this.readStatus = false;
     }
@@ -64,6 +68,9 @@ public class ChatMessage {
 
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
+
+    public String getSenderType() { return senderType; }
+    public void setSenderType(String senderType) { this.senderType = senderType; }
 
     public LocalDateTime getTimestamp() { return timestamp; }
     public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
