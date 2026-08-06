@@ -47,7 +47,7 @@ const Header = () => {
                         <li><Link to="/about">About</Link></li>
                         <li><Link to="/service">Service</Link></li>
                         <li><Link to="/leaderboard">Leaderboard</Link></li>
-                        <li><Link to="/contact">Contact Us</Link></li>
+                        <li><Link to="/reviews">Reviews</Link></li>
                     </ul>
                     <ul className="nav-list2">
                         {user ? (

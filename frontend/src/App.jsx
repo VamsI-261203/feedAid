@@ -6,7 +6,7 @@ import Home from './pages/Home';
 import Donor from './pages/Donor';
 import Receiver from './pages/Receiver';
 import About from './pages/About';
-import Contact from './pages/Contact';
+import Reviews from './pages/Reviews';
 import Service from './pages/Service';
 import Leaderboard from './pages/Leaderboard';
 import Login from './pages/Login';
@@ -36,7 +36,7 @@ function App() {
           <Route path="/donor" element={<ProtectedRoute><Donor /></ProtectedRoute>} />
           <Route path="/receiver" element={<ProtectedRoute><Receiver /></ProtectedRoute>} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/reviews" element={<Reviews />} />
           <Route path="/service" element={<Service />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/login" element={<Login />} />
