@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import '../css/global.css';
+import '../css/login.css';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -31,40 +31,106 @@ const Register = () => {
 
     return (
         <section className="main">
-            <div className="login-box">
-                <div className="form-content">
-                    <form onSubmit={handleSubmit} className="form-inputs">
-                        <div className="row">
-                            <div className="col">
-                                <label htmlFor="name">Name</label>
-                                <input type="text" name="name" className="form-control" id="name" placeholder="Name" required onChange={handleChange} value={formData.name} disabled={loading} />
-                            </div>
-                            <div className="col">
-                                <label htmlFor="email">Email</label>
-                                <input type="email" name="email" className="form-control" id="email" placeholder="Email" required onChange={handleChange} value={formData.email} disabled={loading} />
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col">
-                                <label htmlFor="password">Password</label>
-                                <input type="password" name="password" className="form-control" id="password" placeholder="Password (Min 8 chars, 1 Upper, 1 Special)" required onChange={handleChange} value={formData.password} disabled={loading} />
-                            </div>
-                            <div className="col">
-                                <label htmlFor="phone">Phone</label>
-                                <input type="text" name="phone" className="form-control" id="phone" placeholder="10 Digit Number" pattern="[0-9]{10}" title="Must be exactly 10 digits" required onChange={handleChange} value={formData.phone} disabled={loading} />
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-last col">
-                                <button type="submit" id="last-btn" className="form-button btn btn-success submit-btn" disabled={loading} style={{ opacity: loading ? 0.7 : 1 }}>
-                                    {loading ? 'Processing...' : 'Sign up'}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <div className="register-img-container">
-                        <img src="/img/register1.png" alt="Signu-Img" className="register-img" />
+            <div className="login-card-container">
+                {/* Left decorative panel */}
+                <div className="leftboximg" id="leftbox">
+                    <div className="gradient-overlay"></div>
+                    <div className="leftbox-content">
+                        <h2 className="imgdesc">Join<br />FeedAid</h2>
+                        <p className="leftbox-sub">Create your account and start making a difference. Donate food or find meals in minutes.</p>
                     </div>
+                    <img className="Foodbox" src="/img/Food_box.png" alt="Food sharing background graphic" />
+                </div>
+
+                {/* Right form panel */}
+                <div className="rightboxlogin" id="rightbox">
+                    <form onSubmit={handleSubmit} className="loginform" noValidate>
+                        <div className="logo_icon">
+                            <img src="/img/logo.png" className="logo_page" alt="Feed Aid Logo" />
+                            <h2>Create Account</h2>
+                        </div>
+                        <div className="secondheading">
+                            <h5>Already have an account? <Link to="/login" className="signup-link">Sign in</Link></h5>
+                        </div>
+
+                        <div className="inputs">
+                            <label className="inp-label" htmlFor="reg-name">Full Name</label>
+                            <div className="input-wrapper">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    className="user-input"
+                                    id="reg-name"
+                                    placeholder="Your full name"
+                                    required
+                                    onChange={handleChange}
+                                    value={formData.name}
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="inputs">
+                            <label className="inp-label" htmlFor="reg-email">Email Address</label>
+                            <div className="input-wrapper">
+                                <input
+                                    type="email"
+                                    name="email"
+                                    className="user-input"
+                                    id="reg-email"
+                                    placeholder="name@example.com"
+                                    required
+                                    onChange={handleChange}
+                                    value={formData.email}
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="inputs">
+                            <label className="inp-label" htmlFor="reg-password">Password</label>
+                            <div className="input-wrapper">
+                                <input
+                                    type="password"
+                                    name="password"
+                                    className="user-password"
+                                    id="reg-password"
+                                    placeholder="Min 8 chars, 1 Upper, 1 Special"
+                                    required
+                                    onChange={handleChange}
+                                    value={formData.password}
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="inputs">
+                            <label className="inp-label" htmlFor="reg-phone">Phone Number</label>
+                            <div className="input-wrapper">
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    className="user-input"
+                                    id="reg-phone"
+                                    placeholder="10-digit mobile number"
+                                    pattern="[0-9]{10}"
+                                    title="Must be exactly 10 digits"
+                                    required
+                                    onChange={handleChange}
+                                    value={formData.phone}
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className={`Login-btn ${loading ? 'is-loading' : ''}`}
+                            disabled={loading}
+                        >
+                            {loading ? <span className="btn-spinner" aria-hidden="true"></span> : 'Create Account'}
+                        </button>
+                    </form>
                 </div>
             </div>
         </section>

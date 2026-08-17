@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import '../css/global.css';
 
@@ -38,29 +38,35 @@ const ForgotPassword = () => {
 
     return (
         <section className="main">
-            <div className="login-box" style={{ maxWidth: '500px', margin: '50px auto' }}>
-                <div className="form-content" style={{ padding: '30px', textAlign: 'center' }}>
+            <div className="auth-card">
+                <div className="auth-card-header">
+                    <div className="auth-card-icon">ðŸ”</div>
                     <h2>Forgot Password</h2>
-                    <p>Enter your registered email address and we'll send you an OTP to reset your password.</p>
-                    <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
-                        <div style={{ marginBottom: '20px', textAlign: 'left' }}>
-                            <label htmlFor="email">Email Address</label>
-                            <input 
-                                type="email" 
-                                className="form-control" 
-                                id="email"
-                                placeholder="Enter your email" 
-                                required 
-                                value={email} 
-                                onChange={(e) => setEmail(e.target.value)} 
-                                disabled={loading}
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-success" disabled={loading || !email} style={{ width: '100%', padding: '10px' }}>
-                            {loading ? 'Sending OTP...' : 'Send OTP'}
-                        </button>
-                    </form>
+                    <p>Enter your registered email and we'll send you an OTP to reset your password.</p>
                 </div>
+
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="fp-email">Email Address</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            id="fp-email"
+                            placeholder="name@example.com"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            disabled={loading}
+                        />
+                    </div>
+                    <button type="submit" className="btn-primary" disabled={loading || !email}>
+                        {loading ? <span className="btn-spinner"></span> : 'ðŸ“¨ Send OTP'}
+                    </button>
+                </form>
+
+                <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.875rem', color: 'var(--gray-500)' }}>
+                    Remember your password? <Link to="/login" style={{ color: 'var(--primary)', fontWeight: '600' }}>Sign In</Link>
+                </p>
             </div>
         </section>
     );
